@@ -4,12 +4,12 @@
 // construct to `Option` that can be used to express error conditions. Change
 // the function signature and body to return `Result<String, String>` instead
 // of `Option<String>`.
-fn generate_nametag_text(name: String) -> Option<String> {
+fn generate_nametag_text(name: String) -> Result<String, String> {
     if name.is_empty() {
         // Empty names aren't allowed.
-        None
+        Err("Empty names aren't allowed".to_string())
     } else {
-        Some(format!("Hi! My name is {name}"))
+        Ok(format!("Hi! My name is {}", name))
     }
 }
 
@@ -31,6 +31,10 @@ mod tests {
 
     #[test]
     fn explains_why_generating_nametag_text_fails() {
+        // let a = generate_nametag_text(String::new());
+        // let b = generate_nametag_text(String::new())
+        //     .as_ref()
+        //     .map_err(|e| e.as_str());
         assert_eq!(
             generate_nametag_text(String::new())
                 .as_ref()
