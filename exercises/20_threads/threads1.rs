@@ -8,7 +8,9 @@ use std::{
     time::{Duration, Instant},
 };
 
-fn main() {
+use anyhow::Result;
+
+fn main() -> Result<()> {
     let mut handles = Vec::new();
     for i in 0..10 {
         let handle = thread::spawn(move || {
@@ -24,6 +26,11 @@ fn main() {
     for handle in handles {
         // TODO: Collect the results of all threads into the `results` vector.
         // Use the `JoinHandle` struct which is returned by `thread::spawn`.
+        results.push(
+            handle
+                .join()
+                .map_err(|_| anyhow::anyhow!("Thread panicked"))?,
+        );
     }
 
     if results.len() != 10 {
@@ -34,4 +41,6 @@ fn main() {
     for (i, result) in results.into_iter().enumerate() {
         println!("Thread {i} took {result}ms");
     }
+
+    Ok(())
 }
